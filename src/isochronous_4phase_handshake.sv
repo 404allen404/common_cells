@@ -68,14 +68,20 @@ module isochronous_4phase_handshake (
   // destination is valid if we didn't yet get acknowledge
   assign dst_valid_o = (dst_req_q != dst_ack_q);
 
- `ifndef SYNTHESIS
- // stability guarantees
-  `ifndef COMMON_CELLS_ASSERTS_OFF
+`ifndef SYNTHESIS
+  // stability guarantees
+`ifndef COMMON_CELLS_ASSERTS_OFF
   assert property (@(posedge src_clk_i) disable iff (~src_rst_ni)
-    (src_valid_i && !src_ready_o |=> $stable(src_valid_i))) else $error("src_valid_i is unstable");
+    (src_valid_i && !src_ready_o |=> $stable(
+    src_valid_i
+  )))
+  else $error("src_valid_i is unstable");
   assert property (@(posedge dst_clk_i) disable iff (~dst_rst_ni)
-    (dst_valid_o && !dst_ready_i |=> $stable(dst_valid_o))) else $error("dst_valid_o is unstable");
-  `endif
-  `endif
+    (dst_valid_o && !dst_ready_i |=> $stable(
+    dst_valid_o
+  )))
+  else $error("dst_valid_o is unstable");
+`endif
+`endif
 
 endmodule

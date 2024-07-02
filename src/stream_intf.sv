@@ -11,12 +11,15 @@
 
 // Author: Florian Zaruba <zarubaf@iis.ee.ethz.ch>
 
+/* verilator lint_off PINCONNECTEMPTY */
+/* verilator lint_off DECLFILENAME */
+
 /// A stream interface with custom payload of type `payload_t`.
 /// Handshaking rules as defined in the AXI standard.
 interface STREAM_DV #(
   /// Custom payload type.
   parameter type payload_t = logic
-)(
+) (
   /// Interface clock.
   input logic clk_i
 );
@@ -24,26 +27,18 @@ interface STREAM_DV #(
   logic valid;
   logic ready;
 
-  modport In (
-    output ready,
-    input valid, data
-  );
+  modport In(output ready, input valid, data);
 
-  modport Out (
-    output valid, data,
-    input ready
-  );
+  modport Out(output valid, data, input ready);
 
   /// Passive modport for scoreboard and monitors.
-  modport Passive (
-    input valid, ready, data
-  );
+  modport Passive(input valid, ready, data);
 
   // Make sure that the handshake and payload is stable
-  `ifndef SYNTHESIS
-  `ifndef COMMON_CELLS_ASSERTS_OFF
+`ifndef SYNTHESIS
+`ifndef COMMON_CELLS_ASSERTS_OFF
   assert property (@(posedge clk_i) (valid && !ready |=> $stable(data)));
   assert property (@(posedge clk_i) (valid && !ready |=> valid));
-  `endif
-  `endif
+`endif
+`endif
 endinterface

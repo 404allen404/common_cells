@@ -10,6 +10,9 @@
 
 // Antonio Pullini <pullinia@iis.ee.ethz.ch>
 
+/* verilator lint_off PINCONNECTEMPTY */
+/* verilator lint_off DECLFILENAME */
+
 module edge_propagator (
   input  logic clk_tx_i,
   input  logic rstn_tx_i,
@@ -23,7 +26,7 @@ module edge_propagator (
     .clk_tx_i,
     .rstn_tx_i,
     .edge_i,
-    .ack_tx_o (/* unused */),
+    .ack_tx_o(  /* unused */),
     .clk_rx_i,
     .rstn_rx_i,
     .edge_o

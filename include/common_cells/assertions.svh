@@ -10,14 +10,14 @@
 `define PRIM_ASSERT_SV
 
 `ifdef UVM
-  // report assertion error with UVM if compiled
-  package assert_rpt_pkg;
-    import uvm_pkg::*;
-    `include "uvm_macros.svh"
-    function void assert_rpt(string msg);
-      `uvm_error("ASSERT FAILED", msg)
-    endfunction
-  endpackage
+// report assertion error with UVM if compiled
+package assert_rpt_pkg;
+  import uvm_pkg::*;
+  `include "uvm_macros.svh"
+  function void assert_rpt(string msg);
+    `uvm_error("ASSERT FAILED", msg)
+  endfunction
+endpackage
 `endif
 
 ///////////////////
@@ -29,7 +29,7 @@
 `ifndef SYNTHESIS
 `ifndef XSIM
 `define INC_ASSERT
-`endif   
+`endif
 `endif
 `endif
 
@@ -135,14 +135,16 @@
 
 // Assert that a property is true only when an enable signal is set.  It can be called as a module
 // (or interface) body item.
-`define ASSERT_IF(__name, __prop, __enable, __clk = `ASSERT_DEFAULT_CLK, __rst = `ASSERT_DEFAULT_RST) \
+`define ASSERT_IF(__name, __prop, __enable, __clk = `ASSERT_DEFAULT_CLK,
+                  __rst = `ASSERT_DEFAULT_RST) \
 `ifdef INC_ASSERT                                                                                     \
   `ASSERT(__name, (__enable) |-> (__prop), __clk, __rst)                                              \
 `endif
 
 // Assert that signal has a known value (each bit is either '0' or '1') after reset if enable is
 // set.  It can be called as a module (or interface) body item.
-`define ASSERT_KNOWN_IF(__name, __sig, __enable, __clk = `ASSERT_DEFAULT_CLK, __rst = `ASSERT_DEFAULT_RST) \
+`define ASSERT_KNOWN_IF(__name, __sig, __enable, __clk = `ASSERT_DEFAULT_CLK,
+                        __rst = `ASSERT_DEFAULT_RST) \
 `ifdef INC_ASSERT                                                                                          \
   `ASSERT_KNOWN(__name``KnownEnable, __enable, __clk, __rst)                                               \
   `ASSERT_IF(__name, !$isunknown(__sig), __enable, __clk, __rst)                                           \
@@ -198,4 +200,4 @@
    `COVER(__name, __prop, __clk, __rst)                                                     \
 `endif
 
-`endif // PRIM_ASSERT_SV
+`endif  // PRIM_ASSERT_SV

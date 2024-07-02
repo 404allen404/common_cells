@@ -66,7 +66,7 @@ module multiaddr_decode #(
   input  addr_t                 addr_i,
   input  addr_t                 mask_i,
   /// Address map.
-  input  rule_t [NoRules-1:0]   addr_map_i,
+  input  rule_t [  NoRules-1:0] addr_map_i,
   /// Decoded indices.
   output logic  [NoIndices-1:0] select_o,
   /// Decoded multi-address.
@@ -78,7 +78,7 @@ module multiaddr_decode #(
   output logic                  dec_error_o
 );
 
-  logic [NoRules-1:0] matched_rules; // purely for address map debugging
+  logic [NoRules-1:0] matched_rules;  // purely for address map debugging
 
   always_comb begin
     // default assignments
@@ -106,7 +106,7 @@ module multiaddr_decode #(
         matched_rules[i] = 1'b1;
         dec_valid_o      = 1'b1;
         dec_error_o      = 1'b0;
-        select_o[idx]   |= 1'b1;
+        select_o[idx] |= 1'b1;
         // When there is a partial match, i.e. only a subset of the input address set
         // falls in the address set of the rule, we want to return this subset
         // {addr_o, mask_o}.
@@ -120,35 +120,55 @@ module multiaddr_decode #(
   end
 
   // Assumptions and assertions
-  `ifndef COMMON_CELLS_ASSERTS_OFF
-  `ifndef XSIM
-  `ifndef SYNTHESIS
+`ifndef COMMON_CELLS_ASSERTS_OFF
+`ifndef XSIM
+`ifndef SYNTHESIS
   initial begin : proc_check_parameters
-    assume (NoRules > 0) else
-      $fatal(1, $sformatf("At least one rule needed"));
-    assume ($bits(addr_i) == $bits(addr_map_i[0].addr)) else
-      $warning($sformatf("Input address has %d bits and address map has %d bits.",
-        $bits(addr_i), $bits(addr_map_i[0].addr)));
+    assume (NoRules > 0)
+    else $fatal(1, $sformatf("At least one rule needed"));
+    assume ($bits(addr_i) == $bits(addr_map_i[0].addr))
+    else
+      $warning(
+        $sformatf(
+          "Input address has %d bits and address map has %d bits.",
+          $bits(
+            addr_i
+          ),
+          $bits(
+            addr_map_i[0].addr
+          )
+        )
+      );
   end
 
   // These following assumptions check the validity of the address map.
   // check_idx: Enforces a valid index in the rule.
-  always @(addr_map_i) #0 begin : proc_check_addr_map
-    if (!$isunknown(addr_map_i)) begin
-      for (int unsigned i = 0; i < NoRules; i++) begin
-        // check the SLV ids
-        check_idx : assume (addr_map_i[i].idx < NoIndices) else
-            $fatal(1, $sformatf("This rule has a IDX that is not allowed!!!\n\
+  always @(addr_map_i)
+    #0 begin : proc_check_addr_map
+      if (!$isunknown(addr_map_i)) begin
+        for (int unsigned i = 0; i < NoRules; i++) begin
+          // check the SLV ids
+          check_idx :
+          assume (addr_map_i[i].idx < NoIndices)
+          else
+            $fatal(
+              1,
+              $sformatf(
+                "This rule has a IDX that is not allowed!!!\n\
             Violating rule %d.\n\
             Rule> IDX: %h\n\
             Rule> MAX_IDX: %h\n\
             #####################################################",
-            i, addr_map_i[i].idx, (NoIndices-1)));
+                i,
+                addr_map_i[i].idx,
+                (NoIndices - 1)
+              )
+            );
+        end
       end
     end
-  end
 
-  `endif
-  `endif
-  `endif
+`endif
+`endif
+`endif
 endmodule

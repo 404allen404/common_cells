@@ -18,17 +18,17 @@
 // the heuristics of modern logic Synthesizers work much better with a flat high
 // level description using a for loop and yield exactly the same or even better results.
 
+/* verilator lint_off GENUNNAMED */
 
 module popcount #(
-    parameter  int unsigned INPUT_WIDTH   = 256,
-    localparam int unsigned PopcountWidth = $clog2(INPUT_WIDTH) + 1
+  parameter  int unsigned INPUT_WIDTH   = 256,
+  localparam int unsigned PopcountWidth = $clog2(INPUT_WIDTH) + 1
 ) (
-    input  logic [  INPUT_WIDTH-1:0] data_i,
-    output logic [PopcountWidth-1:0] popcount_o
+  input  logic [  INPUT_WIDTH-1:0] data_i,
+  output logic [PopcountWidth-1:0] popcount_o
 );
 
-  if (INPUT_WIDTH < 1)
-    $error("INPUT_WIDTH must be larger or equal to 1.");
+  if (INPUT_WIDTH < 1) $error("INPUT_WIDTH must be larger or equal to 1.");
 
   always_comb begin
     popcount_o = 0;

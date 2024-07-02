@@ -32,6 +32,8 @@
 /// if the resulting map is valid. It fatals if `start_addr` is higher than `end_addr` (non-NAPOT
 /// only) or if a mapping targets an index that is outside the number of allowed indices.
 /// It issues warnings if the address regions of any two mappings overlap (non-NAPOT only).
+
+`include "cf_math_pkg.sv"
 module addr_decode #(
   /// Highest index which can happen in a rule.
   parameter int unsigned NoIndices = 32'd0,
@@ -66,7 +68,7 @@ module addr_decode #(
   /// Dependent parameter, do **not** overwite!
   ///
   /// Type of the `idx_o` output port.
-  parameter type         idx_t     = logic [IdxWidth-1:0]
+  parameter type         idx_t     = logic                             [IdxWidth-1:0]
 ) (
   /// Address to decode.
   input  addr_t               addr_i,
@@ -92,11 +94,11 @@ module addr_decode #(
 
   // wraps the dynamic configuration version of the address decoder
   addr_decode_dync #(
-    .NoIndices ( NoIndices ),
-    .NoRules   ( NoRules   ),
-    .addr_t    ( addr_t    ),
-    .rule_t    ( rule_t    ),
-    .Napot     ( Napot     )
+    .NoIndices(NoIndices),
+    .NoRules  (NoRules),
+    .addr_t   (addr_t),
+    .rule_t   (rule_t),
+    .Napot    (Napot)
   ) i_addr_decode_dync (
     .addr_i,
     .addr_map_i,
@@ -105,7 +107,7 @@ module addr_decode #(
     .dec_error_o,
     .en_default_idx_i,
     .default_idx_i,
-    .config_ongoing_i ( 1'b0 )
+    .config_ongoing_i(1'b0)
   );
 
 endmodule

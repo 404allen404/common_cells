@@ -17,7 +17,7 @@
 // there has been a handshake. The data channel flows outside of this module.
 module stream_join_dynamic #(
   /// Number of input streams
-  parameter int unsigned N_INP = 32'd0 // Synopsys DC requires a default value for parameters.
+  parameter int unsigned N_INP = 32'd0  // Synopsys DC requires a default value for parameters.
 ) (
   /// Input streams valid handshakes
   input  logic [N_INP-1:0] inp_valid_i,
@@ -39,8 +39,9 @@ module stream_join_dynamic #(
 
 `ifndef SYNTHESIS
 `ifndef COMMON_CELLS_ASSERTS_OFF
-  initial begin: p_assertions
-    assert (N_INP >= 1) else $fatal(1, "N_INP must be at least 1!");
+  initial begin : p_assertions
+    assert (N_INP >= 1)
+    else $fatal(1, "N_INP must be at least 1!");
   end
 `endif
 `endif

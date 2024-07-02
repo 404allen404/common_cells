@@ -21,7 +21,7 @@
 /// input stream can just be applied at all output streams.
 module stream_fork_dynamic #(
   /// Number of output streams
-  parameter int unsigned N_OUP = 32'd0 // Synopsys DC requires a default value for parameters.
+  parameter int unsigned N_OUP = 32'd0  // Synopsys DC requires a default value for parameters.
 ) (
   /// Clock
   input  logic             clk_i,
@@ -43,8 +43,8 @@ module stream_fork_dynamic #(
   input  logic [N_OUP-1:0] ready_i
 );
 
-  logic             int_inp_valid,  int_inp_ready;
-  logic [N_OUP-1:0] int_oup_valid,  int_oup_ready;
+  logic int_inp_valid, int_inp_ready;
+  logic [N_OUP-1:0] int_oup_valid, int_oup_ready;
 
   // Output handshaking
   for (genvar i = 0; i < N_OUP; i++) begin : gen_oups
@@ -75,20 +75,21 @@ module stream_fork_dynamic #(
   end
 
   stream_fork #(
-    .N_OUP  ( N_OUP )
+    .N_OUP(N_OUP)
   ) i_fork (
     .clk_i,
     .rst_ni,
-    .valid_i ( int_inp_valid ),
-    .ready_o ( int_inp_ready ),
-    .valid_o ( int_oup_valid ),
-    .ready_i ( int_oup_ready )
+    .valid_i(int_inp_valid),
+    .ready_o(int_inp_ready),
+    .valid_o(int_oup_valid),
+    .ready_i(int_oup_ready)
   );
 
 `ifndef SYNTHESIS
 `ifndef COMMON_CELLS_ASSERTS_OFF
-  initial begin: p_assertions
-    assert (N_OUP >= 1) else $fatal(1, "N_OUP must be at least 1!");
+  initial begin : p_assertions
+    assert (N_OUP >= 1)
+    else $fatal(1, "N_OUP must be at least 1!");
   end
 `endif
 `endif

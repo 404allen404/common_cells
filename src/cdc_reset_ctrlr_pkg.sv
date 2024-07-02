@@ -14,14 +14,17 @@
 // Author: Manuel Eggimann <meggimann@iis.ee.ethz.ch>
 //
 // Contains common defintions for the CDC Clear Synchronization Circuitry
-
+`ifndef CDC_RESET_CTRLR_PKG_SV_
+`define CDC_RESET_CTRLR_PKG_SV_
 package cdc_reset_ctrlr_pkg;
 
-typedef enum logic[1:0] {
-  CLEAR_PHASE_IDLE,
-  CLEAR_PHASE_ISOLATE,
-  CLEAR_PHASE_CLEAR,
-  CLEAR_PHASE_POST_CLEAR
-} clear_seq_phase_e;
+  typedef enum logic [1:0] {
+    CLEAR_PHASE_IDLE,
+    CLEAR_PHASE_ISOLATE,
+    CLEAR_PHASE_CLEAR,
+    CLEAR_PHASE_POST_CLEAR
+  } clear_seq_phase_e;
 
 endpackage : cdc_reset_ctrlr_pkg
+
+`endif
