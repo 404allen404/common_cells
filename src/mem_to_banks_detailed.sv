@@ -108,18 +108,12 @@ module mem_to_banks_detailed #(
     logic      we;
   } req_t;
 
-  logic                 req_valid;
-  logic [NumBanks-1:0]              req_ready,
-                        resp_valid, resp_ready;
-  req_t [NumBanks-1:0]  bank_req,
-                        bank_oup;
-  logic [NumBanks-1:0]  bank_req_internal,
-                        bank_gnt_internal,
-                        zero_strobe,
-                        dead_response,
-                        dead_response_unmasked;
-  logic                 dead_write_fifo_full,
-                        dead_write_fifo_empty;
+  logic req_valid;
+  logic [NumBanks-1:0] req_ready, resp_valid, resp_ready;
+  req_t [NumBanks-1:0] bank_req, bank_oup;
+  logic [NumBanks-1:0]
+    bank_req_internal, bank_gnt_internal, zero_strobe, dead_response, dead_response_unmasked;
+  logic dead_write_fifo_full, dead_write_fifo_empty;
 
   function automatic addr_t align_addr(input addr_t addr);
     return (addr >> $clog2(DataBytes)) << $clog2(DataBytes);
@@ -181,15 +175,15 @@ module mem_to_banks_detailed #(
     ) i_dead_write_fifo (
       .clk_i,
       .rst_ni,
-      .flush_i    ( 1'b0                           ),
-      .testmode_i ( 1'b0                           ),
-      .full_o     ( dead_write_fifo_full           ),
-      .empty_o    ( dead_write_fifo_empty          ),
-      .usage_o    (),
-      .data_i     ( {NumBanks{we_i}} & zero_strobe ),
-      .push_i     ( req_i & gnt_o                  ),
-      .data_o     ( dead_response_unmasked         ),
-      .pop_i      ( rvalid_o                       )
+      .flush_i   (1'b0),
+      .testmode_i(1'b0),
+      .full_o    (dead_write_fifo_full),
+      .empty_o   (dead_write_fifo_empty),
+      .usage_o   (),
+      .data_i    ({NumBanks{we_i}} & zero_strobe),
+      .push_i    (req_i & gnt_o),
+      .data_o    (dead_response_unmasked),
+      .pop_i     (rvalid_o)
     );
     assign dead_response = dead_response_unmasked & {NumBanks{~dead_write_fifo_empty}};
   end else begin : gen_no_dead_write_fifo
